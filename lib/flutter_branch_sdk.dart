@@ -1,5 +1,7 @@
 library flutter_branch_sdk;
 
+import 'package:flutter/foundation.dart';
+
 import 'src/app_tracking_transparency.dart';
 import 'src/flutter_branch_sdk_platform_interface.dart';
 
