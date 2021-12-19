@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'app_tracking_transparency.dart';
@@ -14,16 +15,16 @@ class FlutterBranchSdkMobile implements FlutterBranchSdkPlatform {
 
   static const EventChannel _eventChannel = const EventChannel(_EVENT_CHANNEL);
 
-  static Stream<Map>? _initSessionStream;
+  static Stream<Map> _initSessionStream;
 
-  static FlutterBranchSdkMobile? _singleton;
+  static FlutterBranchSdkMobile _singleton;
 
   /// Constructs a singleton instance of [FlutterBranchSdkMobile].
   factory FlutterBranchSdkMobile() {
     if (_singleton == null) {
       _singleton = FlutterBranchSdkMobile._();
     }
-    return _singleton!;
+    return _singleton;
   }
 
   FlutterBranchSdkMobile._();
@@ -31,7 +32,7 @@ class FlutterBranchSdkMobile implements FlutterBranchSdkPlatform {
   ///Identifies the current user to the Branch API by supplying a unique identifier as a userId value
 
   @override
-  void initWeb({required String branchKey}) {
+  void initWeb({@required String branchKey}) {
     //nothing
   }
 
@@ -88,7 +89,7 @@ class FlutterBranchSdkMobile implements FlutterBranchSdkPlatform {
       _initSessionStream =
           _eventChannel.receiveBroadcastStream().cast<Map<dynamic, dynamic>>();
 
-    return _initSessionStream!;
+    return _initSessionStream;
   }
 
   ///Use the SDK integration validator to check that you've added the Branch SDK and
@@ -101,8 +102,8 @@ class FlutterBranchSdkMobile implements FlutterBranchSdkPlatform {
   ///Creates a short url for the BUO
   @override
   Future<BranchResponse> getShortUrl(
-      {required BranchUniversalObject buo,
-      required BranchLinkProperties linkProperties}) async {
+      {@required BranchUniversalObject buo,
+      @required BranchLinkProperties linkProperties}) async {
     Map<String, dynamic> _params = {};
     _params['buo'] = buo.toMap();
     _params['lp'] = linkProperties.toMap();
@@ -122,9 +123,9 @@ class FlutterBranchSdkMobile implements FlutterBranchSdkPlatform {
   ///Showing a Share Sheet
   @override
   Future<BranchResponse> showShareSheet(
-      {required BranchUniversalObject buo,
-      required BranchLinkProperties linkProperties,
-      required String messageText,
+      {@required BranchUniversalObject buo,
+      @required BranchLinkProperties linkProperties,
+      @required String messageText,
       String androidMessageTitle = '',
       String androidSharingTitle = ''}) async {
     Map<String, dynamic> _params = {};
@@ -149,7 +150,7 @@ class FlutterBranchSdkMobile implements FlutterBranchSdkPlatform {
   ///Logs this BranchEvent to Branch for tracking and analytics
   @override
   void trackContent(
-      {required BranchUniversalObject buo, required BranchEvent branchEvent}) {
+      {@required BranchUniversalObject buo, @required BranchEvent branchEvent}) {
     Map<String, dynamic> _params = {};
 
     _params['buo'] = buo.toMap();
@@ -161,7 +162,7 @@ class FlutterBranchSdkMobile implements FlutterBranchSdkPlatform {
 
   ///Logs this BranchEvent to Branch for tracking and analytics
   @override
-  void trackContentWithoutBuo({required BranchEvent branchEvent}) {
+  void trackContentWithoutBuo({@required BranchEvent branchEvent}) {
     Map<String, dynamic> _params = {};
 
     if (branchEvent.toMap().isEmpty) {
@@ -174,7 +175,7 @@ class FlutterBranchSdkMobile implements FlutterBranchSdkPlatform {
 
   ///Mark the content referred by this object as viewed. This increment the view count of the contents referred by this object.
   @override
-  void registerView({required BranchUniversalObject buo}) {
+  void registerView({@required BranchUniversalObject buo}) {
     Map<String, dynamic> _params = {};
 
     _params['buo'] = buo.toMap();
@@ -186,8 +187,8 @@ class FlutterBranchSdkMobile implements FlutterBranchSdkPlatform {
   ///For iOS:     List items on Spotlight
   @override
   Future<bool> listOnSearch(
-      {required BranchUniversalObject buo,
-      BranchLinkProperties? linkProperties}) async {
+      {@required BranchUniversalObject buo,
+      BranchLinkProperties linkProperties}) async {
     Map<String, dynamic> _params = {};
 
     _params['buo'] = buo.toMap();
@@ -203,8 +204,8 @@ class FlutterBranchSdkMobile implements FlutterBranchSdkPlatform {
   ///For iOS:     Remove Branch Universal Object from Spotlight if privately indexed
   @override
   Future<bool> removeFromSearch(
-      {required BranchUniversalObject buo,
-      BranchLinkProperties? linkProperties}) async {
+      {@required BranchUniversalObject buo,
+      BranchLinkProperties linkProperties}) async {
     Map<String, dynamic> _params = {};
     _params['buo'] = buo.toMap();
     if (linkProperties != null && linkProperties.toMap().isNotEmpty) {
@@ -236,7 +237,7 @@ class FlutterBranchSdkMobile implements FlutterBranchSdkPlatform {
   ///available credits will be redeemed instead.
   @override
   Future<BranchResponse> redeemRewards(
-      {required int count, String bucket = 'default'}) async {
+      {@required int count, String bucket = 'default'}) async {
     Map<String, dynamic> _params = {};
     _params['count'] = count;
     _params['bucket'] = bucket;
@@ -302,7 +303,7 @@ class FlutterBranchSdkMobile implements FlutterBranchSdkPlatform {
       return AppTrackingStatus.notSupported;
     }
     final int status = (await _messageChannel
-        .invokeMethod<int>('requestTrackingAuthorization'))!;
+        .invokeMethod<int>('requestTrackingAuthorization'));
     return AppTrackingStatus.values[status];
   }
 
@@ -314,7 +315,7 @@ class FlutterBranchSdkMobile implements FlutterBranchSdkPlatform {
       return AppTrackingStatus.notSupported;
     }
     final int status = (await _messageChannel
-        .invokeMethod<int>('getTrackingAuthorizationStatus'))!;
+        .invokeMethod<int>('getTrackingAuthorizationStatus'));
     return AppTrackingStatus.values[status];
   }
 
@@ -327,7 +328,7 @@ class FlutterBranchSdkMobile implements FlutterBranchSdkPlatform {
     }
 
     final String uuid = (await _messageChannel
-        .invokeMethod<String>('getAdvertisingIdentifier'))!;
+        .invokeMethod<String>('getAdvertisingIdentifier'));
     return uuid;
   }
 }
